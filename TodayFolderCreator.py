@@ -56,7 +56,7 @@ class SettingsApp:
     def __init__(self, root, settings):
         self.root = root
         self.settings = settings
-        root.title("Setting")
+        root.title("DayBox (設定)")
         
         window_width = 460
         window_height = 280
@@ -83,18 +83,18 @@ class SettingsApp:
 
         ttk.Checkbutton(frame, text="ドロップ後にフォルダを開く", variable=self.var_open).grid(row=0, column=0, sticky=tk.W, pady=5)
         ttk.Checkbutton(frame, text="ドライブが違う場合でも、コピーせず移動", variable=self.var_move).grid(row=1, column=0, sticky=tk.W, pady=5)
-        ttk.Checkbutton(frame, text="今日のフォルダの作成先をTodayFolders以下にする", variable=self.var_under).grid(row=2, column=0, sticky=tk.W, pady=5)
+        ttk.Checkbutton(frame, text="作成先を「DayBox」親フォルダ内にまとめる", variable=self.var_under).grid(row=2, column=0, sticky=tk.W, pady=5)
         
         comp_frame = ttk.Frame(frame)
         comp_frame.grid(row=3, column=0, sticky=tk.W, pady=5)
-        ttk.Checkbutton(comp_frame, text="過去のTodayFolderを圧縮する", variable=self.var_compress).pack(side=tk.LEFT)
+        ttk.Checkbutton(comp_frame, text="過去のDayBoxを圧縮する", variable=self.var_compress).pack(side=tk.LEFT)
         self.spin_days = ttk.Spinbox(comp_frame, from_=0, to=365, textvariable=self.var_days, width=5)
         self.spin_days.pack(side=tk.LEFT, padx=5)
         ttk.Label(comp_frame, text="日後 (""0""で直ちに実行)").pack(side=tk.LEFT)
 
         del_frame = ttk.Frame(frame)
         del_frame.grid(row=4, column=0, sticky=tk.W, pady=5)
-        ttk.Checkbutton(del_frame, text="過去のTodayFolderを削除する", variable=self.var_delete).pack(side=tk.LEFT)
+        ttk.Checkbutton(del_frame, text="過去のDayBoxを削除する", variable=self.var_delete).pack(side=tk.LEFT)
         self.spin_del_days = ttk.Spinbox(del_frame, from_=0, to=365, textvariable=self.var_del_days, width=5)
         self.spin_del_days.pack(side=tk.LEFT, padx=5)
         ttk.Label(del_frame, text="日後 (""0""で直ちに実行)").pack(side=tk.LEFT)
@@ -106,8 +106,8 @@ class SettingsApp:
         
         info_text = (
             "○操作\n"
-            "   [ダブルクリック] Today Folderを作成・表示\n"
-            "   [ファイル・フォルダをドラッグアンドドロップ] Today Folderの作成・ファイル、フォルダを移動\n"
+            "   [ダブルクリック] 今日のDayBoxを作成・表示\n"
+            "   [ドラッグ＆ドロップ] DayBoxを作成・アイテムを整理\n"
             "   [本体をShift + ダブルクリック] 設定画面を表示\n"
             "   ※ ショートカットに「--nosettings」を付けると、Shiftを押していても設定画面を開きません。"
         )
@@ -138,7 +138,7 @@ class SettingsApp:
 def get_today_folder_path(settings):
     base = get_base_dir()
     if settings.get('under_todayfolders', False):
-        base = os.path.join(base, 'TodayFolders')
+        base = os.path.join(base, 'DayBox')
         os.makedirs(base, exist_ok=True)
     today_str = datetime.date.today().strftime('%Y-%m-%d')
     folder_path = os.path.join(base, today_str)
@@ -158,7 +158,7 @@ def do_compression(settings):
     days = settings.get('compress_days', 3)
     base = get_base_dir()
     if settings.get('under_todayfolders', False):
-        base = os.path.join(base, 'TodayFolders')
+        base = os.path.join(base, 'DayBox')
     
     if not os.path.exists(base):
         return
@@ -230,7 +230,7 @@ def do_deletion(settings):
     days = settings.get('delete_days', 7)
     base = get_base_dir()
     if settings.get('under_todayfolders', False):
-        base = os.path.join(base, 'TodayFolders')
+        base = os.path.join(base, 'DayBox')
     
     if not os.path.exists(base):
         return
